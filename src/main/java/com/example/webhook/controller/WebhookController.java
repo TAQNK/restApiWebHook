@@ -1,27 +1,27 @@
 package com.example.webhook.controller;
 
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.webhook.model.MessageRequest;
+import com.example.webhook.service.ChatService;
 
 @RestController
+@RequestMapping("/webhook")
 public class WebhookController {
 
-    @PostMapping("/webhook")
-    public String webhook(@RequestBody Map<String, String> body) {
-        String message = body.get("message");
+    @Autowired
+    private ChatService chatService;
 
-        if (message == null) return "Invalid";
+    @PostMapping
+    public String receiveMessage(@RequestBody MessageRequest request) {
 
-        switch (message.toLowerCase()) {
-            case "hi":
-                return "Hello ";
-            case "bye":
-                return "Goodbye ";
-            default:
-                return "Unknown message ";
-        }
+        // Log incoming message
+        System.out.println("Message from " + request.getSender() + ": " + request.getMessage());
+
+        // Generate reply
+        String reply = chatService.getReply(request.getMessage());
+
+        return reply;
     }
 }
