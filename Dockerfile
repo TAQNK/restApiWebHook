@@ -1,5 +1,5 @@
-# Use official Java runtime
-FROM openjdk:17-jdk-slim
+# Use maintained Java 17 image
+FROM eclipse-temurin:17-jdk-jammy
 
 # Set working directory
 WORKDIR /app
@@ -13,8 +13,8 @@ RUN chmod +x mvnw
 # Build the application
 RUN ./mvnw clean package -DskipTests
 
-# Expose port (Render will override with PORT)
+# Expose port
 EXPOSE 8080
 
 # Run the jar file
-CMD ["java", "-jar", "target/*.jar"]
+CMD ["sh", "-c", "java -jar target/*.jar"]
